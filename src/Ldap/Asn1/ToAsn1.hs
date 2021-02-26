@@ -14,7 +14,7 @@ import qualified Data.ASN1.Types as Asn1
 import           Data.ByteString (ByteString)
 import           Data.Foldable (fold, foldMap)
 import           Data.List.NonEmpty (NonEmpty)
-import           Data.Maybe (maybe)
+import           Data.Maybe (Maybe, maybe)
 import           Data.Monoid (Endo(Endo), (<>), mempty)
 import qualified Data.Text.Encoding as Text
 import           Prelude (Integer, (.), fromIntegral)
@@ -413,6 +413,9 @@ instance ToAsn1 a => ToAsn1 [a] where
   toAsn1 = foldMap toAsn1
 
 instance ToAsn1 a => ToAsn1 (NonEmpty a) where
+  toAsn1 = foldMap toAsn1
+
+instance ToAsn1 a => ToAsn1 (Maybe a) where
   toAsn1 = foldMap toAsn1
 
 sequence :: Endo [ASN1] -> Endo [ASN1]

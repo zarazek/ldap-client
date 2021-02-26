@@ -12,7 +12,7 @@ import           SpecHelper (locally, dns, pikachu, oddish)
 
 spec :: Spec
 spec = do
-  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) f []
+  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) (Just f) []
 
   it "deletes an entry" $ do
     res <- locally $ \l -> do

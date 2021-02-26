@@ -36,6 +36,6 @@ spec = do
     res <- locally $ \l -> do
       Ldap.bind l (Dn "cn=admin") (Password "secret")
       [Ldap.SearchEntry udn _]
-        <- Ldap.search l (Dn "o=localhost") mempty (Attr "cn" := "pikachu") []
+        <- Ldap.search l (Dn "o=localhost") mempty (Just $ Attr "cn" := "pikachu") []
       Ldap.bind l udn (Password "i-choose-you")
     res `shouldBe` Right ()

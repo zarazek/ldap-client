@@ -22,7 +22,7 @@ newtype Id = Id { unId :: Int32 }
 data ProtocolClientOp =
     BindRequest !Int8 !LdapDn !AuthenticationChoice
   | UnbindRequest
-  | SearchRequest !LdapDn !Scope !DerefAliases !Int32 !Int32 !Bool !Filter !AttributeSelection
+  | SearchRequest !LdapDn !Scope !DerefAliases !Int32 !Int32 !Bool !(Maybe Filter) !AttributeSelection
   | ModifyRequest !LdapDn ![(Operation, PartialAttribute)]
   | AddRequest !LdapDn !AttributeList
   | DeleteRequest !LdapDn

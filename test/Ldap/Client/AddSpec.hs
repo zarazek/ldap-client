@@ -12,7 +12,7 @@ import           SpecHelper (locally , dns , vulpix)
 
 spec :: Spec
 spec = do
-  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) f []
+  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) (Just f) []
 
   it "adds an entry" $ do
     res <- locally $ \l -> do

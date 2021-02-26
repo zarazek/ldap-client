@@ -50,7 +50,7 @@ import           Ldap.Client.Internal
 
 
 -- | Perform the Search operation synchronously. Raises 'ResponseError' on failures.
-search :: Ldap -> Dn -> Mod Search -> Filter -> [Attr] -> IO [SearchEntry]
+search :: Ldap -> Dn -> Mod Search -> Maybe Filter -> [Attr] -> IO [SearchEntry]
 search l base opts flt attributes =
   eitherToIO =<< searchEither l base opts flt attributes
 
@@ -60,7 +60,7 @@ searchEither
   :: Ldap
   -> Dn
   -> Mod Search
-  -> Filter
+  -> Maybe Filter
   -> [Attr]
   -> IO (Either ResponseError [SearchEntry])
 searchEither l base opts flt attributes =
@@ -68,7 +68,7 @@ searchEither l base opts flt attributes =
 
 -- | Perform the Search operation asynchronously. Call 'Ldap.Client.wait' to wait
 -- for its completion.
-searchAsync :: Ldap -> Dn -> Mod Search -> Filter -> [Attr] -> IO (Async [SearchEntry])
+searchAsync :: Ldap -> Dn -> Mod Search -> Maybe Filter -> [Attr] -> IO (Async [SearchEntry])
 searchAsync l base opts flt attributes =
   atomically (searchAsyncSTM l base opts flt attributes)
 
@@ -80,13 +80,13 @@ searchAsyncSTM
   :: Ldap
   -> Dn
   -> Mod Search
-  -> Filter
+  -> Maybe Filter
   -> [Attr]
   -> STM (Async [SearchEntry])
 searchAsyncSTM l base opts flt attributes =
   let req = searchRequest base opts flt attributes in sendRequest l (searchResult req) req
 
-searchRequest :: Dn -> Mod Search -> Filter -> [Attr] -> Request
+searchRequest :: Dn -> Mod Search -> Maybe Filter -> [Attr] -> Request
 searchRequest (Dn base) (Mod m) flt attributes =
   Type.SearchRequest (Type.LdapDn (Type.LdapString base))
                      _scope
@@ -94,7 +94,7 @@ searchRequest (Dn base) (Mod m) flt attributes =
                      _size
                      _time
                      _typesOnly
-                     (fromFilter flt)
+                     (fromFilter <$> flt)
                      (Type.AttributeSelection (map (Type.LdapString . unAttr) attributes))
  where
   Search { _scope, _derefAliases, _size, _time, _typesOnly } =

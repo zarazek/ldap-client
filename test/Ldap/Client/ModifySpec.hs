@@ -10,7 +10,7 @@ import           SpecHelper (locally, charizard, pikachu, raichu)
 
 spec :: Spec
 spec = do
-  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) f []
+  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) (Just f) []
 
   context "delete" $ do
     it "can land ‘charizard’" $ do

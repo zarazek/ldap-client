@@ -27,7 +27,7 @@ import           SpecHelper
 
 spec :: Spec
 spec = do
-  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) f []
+  let go l f = Ldap.search l (Dn "o=localhost") (Ldap.typesOnly True) (Just f) []
 
   it "cannot search as ‘pikachu’" $ do
     res <- locally $ \l -> do
@@ -40,7 +40,7 @@ spec = do
           0
           0
           True
-          (Ldap.Type.Present (Ldap.Type.AttributeDescription (Ldap.Type.LdapString "password")))
+          (Just (Ldap.Type.Present (Ldap.Type.AttributeDescription (Ldap.Type.LdapString "password"))))
           (Ldap.Type.AttributeSelection [])
     res `shouldBe` Left
       (Ldap.ResponseError
